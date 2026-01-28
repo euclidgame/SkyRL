@@ -127,6 +127,8 @@ class HFModelWrapper(nn.Module):
                     )
                     from transformers import AttentionInterface, AttentionMaskInterface
 
+                    logger.info("Patching GPT-OSS attention with Unsloth's flex attn")
+
                     AttentionInterface.register("custom_flex", custom_attention)
                     AttentionMaskInterface.register("custom_flex", custom_attention_mask)
                     # set attention implementation to be `custom_flex`

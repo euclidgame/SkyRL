@@ -58,9 +58,7 @@ uv run --isolated --extra vllm "${ENV_FILE_ARGS[@]}" -m examples.imo_llm_judge.m
   data.train_data="['$DATA_DIR/train.parquet']" \
   data.val_data="['$DATA_DIR/validation.parquet']" \
   trainer.policy.model.path="unsloth/gpt-oss-20b-BF16" \
-  trainer.policy.model.lora.rank=32 \
-  trainer.policy.model.lora.alpha=32 \
-  trainer.policy.optimizer_config.lr=1.0e-5 \
+  trainer.policy.optimizer_config.lr=1.0e-6 \
   trainer.flash_attn=false \
   trainer.use_sample_packing=false \
   trainer.strategy=fsdp2 \
@@ -71,8 +69,8 @@ uv run --isolated --extra vllm "${ENV_FILE_ARGS[@]}" -m examples.imo_llm_judge.m
   trainer.algorithm.use_kl_loss=true \
   trainer.epochs=20 \
   trainer.update_epochs_per_batch=1 \
-  trainer.train_batch_size=32 \
-  trainer.policy_mini_batch_size=32 \
+  trainer.train_batch_size=8 \
+  trainer.policy_mini_batch_size=8 \
   trainer.micro_forward_batch_size_per_gpu=1 \
   trainer.micro_train_batch_size_per_gpu=1 \
   trainer.max_prompt_length=2048 \
@@ -96,10 +94,10 @@ uv run --isolated --extra vllm "${ENV_FILE_ARGS[@]}" -m examples.imo_llm_judge.m
   generator.async_engine=true \
   generator.batched=false \
   generator.enforce_eager=true \
-  +generator.chat_template_kwargs={reasoning_effort:'medium'} \
-  generator.n_samples_per_prompt=32 \
+  +generator.chat_template_kwargs={reasoning_effort:'low'} \
+  generator.n_samples_per_prompt=8 \
   generator.eval_n_samples_per_prompt=8 \
-  generator.sampling_params.max_generate_length=32768 \
+  generator.sampling_params.max_generate_length=8192 \
   generator.sampling_params.temperature=1.0 \
   generator.sampling_params.top_p=1.0 \
   generator.debug_log_rendered_prompt=true \

@@ -249,6 +249,12 @@ generator:
   # Chat templating kwargs to pass to `tokenizer.apply_chat_template`
   chat_template_kwargs: {}
 
+  # Debug: log rendered prompts after chat template is applied
+  debug_log_rendered_prompt: false
+  debug_log_rendered_prompt_every_n_steps: 1
+  debug_log_rendered_prompt_max_per_step: 1
+  debug_log_rendered_prompt_max_chars: 2000
+
   # Inference engine arguments. Arguments are passed directly to the vLLM or SGLang engine, so names must match
   # the engine's args. To specify an engine arg in the CLI override, use the format: +generator.engine_init_kwargs.arg_name=value
   engine_init_kwargs: {}

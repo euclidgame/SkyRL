@@ -180,6 +180,45 @@ class SkyRLGymGenerator(GeneratorInterface):
         else:
             return func(*args, **kwargs)
 
+    def _maybe_log_rendered_prompt(
+        self,
+        chat_history: ConversationType,
+        input_ids: List[int],
+        trajectory_id: Optional[TrajectoryID],
+        label: str = "initial",
+    ):
+        """Debug helper: log the rendered prompt after chat template is applied."""
+        cfg = self.generator_cfg
+        if not getattr(cfg, "debug_log_rendered_prompt", False):
+            return
+        
+        every_n = getattr(cfg, "debug_log_rendered_prompt_every_n_steps", 1)
+        max_per_step = getattr(cfg, "debug_log_rendered_prompt_max_per_step", 1)
+        max_chars = getattr(cfg, "debug_log_rendered_prompt_max_chars", 2000)
+        
+        # Use global_step if available
+        step = getattr(self, "global_step", 0)
+        if step % every_n != 0:
+            return
+        
+        # Track how many we've logged this step
+        log_count_attr = f"_debug_log_count_step_{step}"
+        count = getattr(self, log_count_attr, 0)
+        if count >= max_per_step:
+            return
+        setattr(self, log_count_attr, count + 1)
+        
+        # Decode and log
+        rendered = self.tokenizer.decode(input_ids, skip_special_tokens=False)
+        if len(rendered) > max_chars:
+            rendered = rendered[:max_chars] + f"... [truncated, {len(rendered)} chars total]"
+        
+        logger.info(
+            f"[DEBUG RENDERED PROMPT] step={step} trajectory_id={trajectory_id} label={label}\n"
+            f"--- Chat history ({len(chat_history)} messages) ---\n{chat_history}\n"
+            f"--- Rendered ({len(input_ids)} tokens) ---\n{rendered}"
+        )
+
     async def agent_loop(
         self,
         prompt: ConversationType,
@@ -245,6 +284,9 @@ class SkyRLGymGenerator(GeneratorInterface):
             tokenize=True,
             **self.generator_cfg.chat_template_kwargs,
         )
+        
+        # Debug: log the rendered prompt
+        self._maybe_log_rendered_prompt(chat_history, initial_input_ids, trajectory_id, label="initial")
 
         initial_prompt_length = len(initial_input_ids)
         loss_mask = []  # this excludes the prompt
