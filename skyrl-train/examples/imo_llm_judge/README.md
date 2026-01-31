@@ -11,8 +11,8 @@ Convert your Tinker AnswerBench JSONL into SkyRL parquet format:
 
 ```bash
 uv run examples/imo_llm_judge/imo_dataset_judge.py \
-  --train_jsonl /accounts/projects/berkeleynlp/windsey/projects/tinker-cookbook/training_data_imo/answerbench-hard32-trainset.jsonl \
-  --val_jsonl   /accounts/projects/berkeleynlp/windsey/projects/tinker-cookbook/training_data_imo/answerbench-hard32.jsonl \
+  --train_jsonl ../answerbench-hard32-trainset.jsonl \
+  --val_jsonl   ../answerbench-hard32.jsonl \
   --output_dir  $HOME/data/imo_llm_judge
 ```
 

@@ -18,9 +18,9 @@ set -x
 DATA_DIR="$HOME/data/imo_llm_judge"
 CKPT_PATH="./ckpts/imo_llm_judge_ckpt"
 
-NUM_GPUS=4
+NUM_GPUS=8
 NUM_INFERENCE_ENGINES=1
-TP_SIZE=4
+TP_SIZE=8
 LOGGER=wandb
 
 # =============================================================================
@@ -69,8 +69,8 @@ uv run --isolated --extra vllm "${ENV_FILE_ARGS[@]}" -m examples.imo_llm_judge.m
   trainer.algorithm.use_kl_loss=true \
   trainer.epochs=20 \
   trainer.update_epochs_per_batch=1 \
-  trainer.train_batch_size=8 \
-  trainer.policy_mini_batch_size=8 \
+  trainer.train_batch_size=32 \
+  trainer.policy_mini_batch_size=32 \
   trainer.micro_forward_batch_size_per_gpu=1 \
   trainer.micro_train_batch_size_per_gpu=1 \
   trainer.max_prompt_length=2048 \
@@ -95,9 +95,9 @@ uv run --isolated --extra vllm "${ENV_FILE_ARGS[@]}" -m examples.imo_llm_judge.m
   generator.batched=false \
   generator.enforce_eager=true \
   +generator.chat_template_kwargs={reasoning_effort:'low'} \
-  generator.n_samples_per_prompt=8 \
+  generator.n_samples_per_prompt=32 \
   generator.eval_n_samples_per_prompt=8 \
-  generator.sampling_params.max_generate_length=8192 \
+  generator.sampling_params.max_generate_length=32768 \
   generator.sampling_params.temperature=1.0 \
   generator.sampling_params.top_p=1.0 \
   generator.debug_log_rendered_prompt=true \

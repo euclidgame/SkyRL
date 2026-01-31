@@ -25,9 +25,8 @@ def map_row(split: str):
         data = {
             "data_source": "imo_answerbench",
             "prompt": [{"role": "user", "content": problem.strip() + IMO_SUFFIX}],
-            "env_class": "imo_llm_judge",
-            "reward_spec": {
-                "method": "rule",
+            "reward_model": {
+                "style": "rule",
                 "ground_truth": str(short_answer).strip(),
             },
             "extra_info": {

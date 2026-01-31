@@ -18,9 +18,9 @@ set -x
 DATA_DIR="$HOME/data/imo_llm_judge"
 CKPT_PATH="./ckpts/imo_llm_judge_ckpt"
 
-NUM_GPUS=4
+NUM_GPUS=8
 NUM_INFERENCE_ENGINES=1
-TP_SIZE=4
+TP_SIZE=8
 LOGGER=wandb
 
 # =============================================================================
